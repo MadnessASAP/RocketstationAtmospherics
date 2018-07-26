@@ -3,19 +3,14 @@ using Assets.Scripts.Atmospherics;
 
 namespace RocketstationAtmospherics
 {
-    public class VolumePump
+    public class VolumePump : AtmosphericDevice
     {
-        public VolumePump(float volume = 50.0f, Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null)
-        {
-            VolumeSetting = volume;
-            InputAtmosphere = inputAtmosphere;
-            OutputAtmosphere = outputAtmosphere;
-        }
+        public VolumePump(Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null) : base(inputAtmosphere, outputAtmosphere) { }
 
         /// <summary>
         /// Cycle the volume pump moving VolumeSetting liters from the input to the output
         /// </summary>
-        public void Tick()
+        public override void Tick()
         {
             if (InputAtmosphere == null || OutputAtmosphere == null) return;
             float p1int = InputAtmosphere.PressureGassesAndLiquidsInPa;
@@ -73,7 +68,5 @@ namespace RocketstationAtmospherics
         private float volumeSetting;
 
         public float UsedPower { get; protected set; }
-
-        public Atmosphere InputAtmosphere, OutputAtmosphere;
     }
 }

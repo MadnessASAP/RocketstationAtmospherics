@@ -3,25 +3,17 @@ using Assets.Scripts.Atmospherics;
 
 namespace RocketstationAtmospherics
 {
-    public class Valve
+    public class Valve : AtmosphericDevice
     {
-        public Valve(float sonicConductance = 1.148e-3f, bool bidirectional = true, float open = 0.0f,  Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null, float timestep = 0.5f, int fidelity = 10)
+        public Valve(Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null, float sonicConductance = 8e-4f) : base(inputAtmosphere, outputAtmosphere)
         {
-            InputAtmosphere = inputAtmosphere;
-            OutputAtmosphere = outputAtmosphere;
             SonicConductance = sonicConductance;
-            Bidirectional = bidirectional;
-            Open = open;
-            Timestep = timestep;
-            Fidelity = fidelity;
         }
-
-        private Valve() { }
 
         /// <summary>
         /// Simulates the flow from the InputAtmosphere to the OutputAtmosphere (or reverse if the valve is bidirectional) over Timestep seconds.
         /// </summary>
-        public void Tick()
+        public override void Tick()
         {
             if (InputAtmosphere == null || OutputAtmosphere == null) return;
 
@@ -97,10 +89,10 @@ namespace RocketstationAtmospherics
         /// </summary>
         public virtual float Open
         {
-            get => setting;
-            set => setting = Math.Max(0.0f, Math.Min(value, 1.0f));
+            get => open;
+            set => open = Math.Max(0.0f, Math.Min(value, 1.0f));
         }
-        private float setting = 0.0f;
+        private float open = 0.0f;
 
         /// <summary>
         /// Does this valve allow flow in both directions
@@ -121,9 +113,5 @@ namespace RocketstationAtmospherics
             set => fidelity = Math.Max(value, 1);
         }
         private int fidelity = 10;
-
-
-        public Atmosphere InputAtmosphere { get; set; }
-        public Atmosphere OutputAtmosphere { get; set; }
     }
 }

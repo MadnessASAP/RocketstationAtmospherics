@@ -7,18 +7,9 @@ namespace RocketstationAtmospherics
     public class PressureRegulator : Valve
     {
         public PressureRegulator(RegulatorType regulatorType = RegulatorType.Upstream, float sonicConductance = 8e-4f,
-            float PressureLimit = 50000, float throttleRange = 50000,
-            Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null, float timestep = 0.5f, int fidelity = 10)
+            Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null) : base(inputAtmosphere, outputAtmosphere, sonicConductance)
         {
-            SonicConductance = sonicConductance;
-            PressureLimit = pressureLimit;
-            ThrottleRange = throttleRange;
-            InputAtmosphere = inputAtmosphere;
-            OutputAtmosphere = outputAtmosphere;
-            Timestep = timestep;
-            Fidelity = fidelity;
             RegulatorType = regulatorType;
-            Open = 1.0f;
         }
 
         /// <summary>

@@ -46,6 +46,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DeviceTest\DeviceTest.csproj">
+      <Project>{03e8d396-dce1-4abd-a3b2-2c25d54868e3}</Project>
+      <Name>DeviceTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RocketstationAtmospherics\RocketstationAtmospherics.csproj">
       <Project>{3f99b4bf-a43a-4ccf-9570-8e54f9af6dc5}</Project>
       <Name>RocketstationAtmospherics</Name>

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using RocketstationAtmospherics;
+using DeviceTest;
 using Assets.Scripts.Atmospherics;
 
 namespace PressureRegulatorTest
@@ -8,25 +10,37 @@ namespace PressureRegulatorTest
     {
         static void Main(string[] args)
         {
-            Atmosphere input = new Atmosphere();
-            Atmosphere output = new Atmosphere();
+            if (args.Length != 2) PrintHelpAndExit();
 
-            ProcessArgs(args, input, output);
-
-            PressureRegulator pressureRegulator = new PressureRegulator(inputAtmosphere: input, outputAtmosphere: output);
-            pressureRegulator.PressureLimit = 1e6f;
-
-            Console.WriteLine("***** Inital Conditions *****");
-            Console.WriteLine(" Input: {0,8:F2} kPa {1,8:F2} K", input.PressureGassesAndLiquids, input.Temperature);
-            Console.WriteLine("Output: {0,8:F2} kPa {1,8:F2} K", output.PressureGassesAndLiquids, output.Temperature);
-            Console.WriteLine();
-
-            for (int i = 0; i < 100; i++)
+            PressureRegulator pressureRegulator = new PressureRegulator()
             {
-                pressureRegulator.Tick();
-                Console.WriteLine("***** Cycle " + i + "*****");
-                Console.WriteLine(" Input: {0,8:F2} kPa {1,8:F2} K", input.PressureGassesAndLiquids, input.Temperature);
-                Console.WriteLine("Output: {0,8:F2} kPa {1,8:F2} K", output.PressureGassesAndLiquids, output.Temperature);
+                PressureLimit = 1e6f
+            };
+            DeviceTest.Test deviceTest;
+            try { deviceTest = new DeviceTest.Test(pressureRegulator, args[0], args[1]); }
+            catch (FormatException e) { Console.WriteLine(e); PrintHelpAndExit(); return; }
+
+            Console.WriteLine("|Stp|                 Input                |                Output                |");
+            Console.WriteLine("| # | Temperature|  Pressure  |    Mole    | Temperature|  Pressure  |    Mole    |");
+            Console.WriteLine("+===+============+============+============+============+============+============+");
+            Console.WriteLine("|{0,3}| {1}| {2}| {3}| {4}| {5}| {6}|", 0,
+                deviceTest.inputHistory[0].TemperatureString,
+                deviceTest.inputHistory[0].PressureString,
+                deviceTest.inputHistory[0].MolesString,
+                deviceTest.outputHistory[0].TemperatureString,
+                deviceTest.outputHistory[0].PressureString,
+                deviceTest.outputHistory[0].MolesString);
+
+            for (int i = 1; i < 10; i++)
+            {
+                deviceTest.Tick();
+                Console.WriteLine("|{0,3}| {1}| {2}| {3}| {4}| {5}| {6}|", i,
+                    deviceTest.inputHistory[i].TemperatureString,
+                    deviceTest.inputHistory[i].PressureString,
+                    deviceTest.inputHistory[i].MolesString,
+                    deviceTest.outputHistory[i].TemperatureString,
+                    deviceTest.outputHistory[i].PressureString,
+                    deviceTest.outputHistory[i].MolesString);
             }
 
 #if DEBUG
@@ -34,110 +48,18 @@ namespace PressureRegulatorTest
 #endif
         }
 
-        private static void ProcessArgs(string[] args, Atmosphere input, Atmosphere output)
-        {
-            bool processingOutputMixture = false;
-            float moles = 0f;
-            float outputTemp = 295.15f;
-            float inputTemp = 295.15f;
-            for (int i = 0; i < args.Length; i++)
-            {
-                if (i == 0)
-                {
-                    if (!float.TryParse(args[i], out input.Volume)) PrintHelpAndExit();
-                    else continue;
-                }
-                else if (!processingOutputMixture)
-                {
-                    switch (args[i].ToLower())
-                    {
-                        case "o2:":
-                            if (float.TryParse(args[++i], out moles)) { input.Add(new GasMixture(oxygen: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "n2:":
-                            if (float.TryParse(args[++i], out moles)) { input.Add(new GasMixture(nitrogen: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "h2:":
-                            if (float.TryParse(args[++i], out moles)) { input.Add(new GasMixture(volatiles: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "x:":
-                            if (float.TryParse(args[++i], out moles)) { input.Add(new GasMixture(pollutant: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "co2:":
-                            if (float.TryParse(args[++i], out moles)) { input.Add(new GasMixture(carbonDioxide: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "h2o:":
-                            if (float.TryParse(args[++i], out moles)) { input.Add(new GasMixture(water: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "temp:":
-                            if (!float.TryParse(args[++i], out inputTemp)) PrintHelpAndExit();
-                            continue;
-                        default:
-                            if (float.TryParse(args[i], out output.Volume)) processingOutputMixture = true;
-                            else PrintHelpAndExit();
-                            continue;
-                    }
-                }
-                else
-                {
-                    switch (args[i].ToLower())
-                    {
-                        case "o2:":
-                            if (float.TryParse(args[++i], out moles)) { output.Add(new GasMixture(oxygen: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "n2:":
-                            if (float.TryParse(args[++i], out moles)) { output.Add(new GasMixture(nitrogen: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "h2:":
-                            if (float.TryParse(args[++i], out moles)) { output.Add(new GasMixture(volatiles: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "x:":
-                            if (float.TryParse(args[++i], out moles)) { output.Add(new GasMixture(pollutant: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "co2:":
-                            if (float.TryParse(args[++i], out moles)) { output.Add(new GasMixture(carbonDioxide: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "h2o:":
-                            if (float.TryParse(args[++i], out moles)) { output.Add(new GasMixture(water: moles)); }
-                            else PrintHelpAndExit();
-                            continue;
-                        case "temp:":
-                            if (!float.TryParse(args[++i], out outputTemp)) PrintHelpAndExit();
-                            continue;
-                        default:
-                            PrintHelpAndExit();
-                            break;
-                    }
-                }
-            }
-            if (!processingOutputMixture) PrintHelpAndExit();
-            input.GasMixture.AddEnergy(input.GasMixture.HeatCapacity / 100 * inputTemp);
-            output.GasMixture.AddEnergy(output.GasMixture.HeatCapacity / 100 * outputTemp);
-        }
-
         private static void PrintHelpAndExit()
         {
-            Console.WriteLine("PressureRegulatorTest InputVolume [Gas Mixture Specification] OutputVolume [Gas Mixture Specification]");
-            Console.WriteLine("  InputVolume and OutputVolume specifiy the sice of their respective atmospheres in liters.");
-            Console.WriteLine("  Gas Mixture Specification if composed of 0 or 1 of the following items");
-            Console.WriteLine("    o2: MolesOfOxygen          # of moles of Oxygen to inlude in the mixture");
-            Console.WriteLine("    n2: MolesOfNitrogen        # of moles of Nitrogen to inlude in the mixture");
-            Console.WriteLine("    h2: MolesOfVolatiles       # of moles of Volatiles to inlude in the mixture");
-            Console.WriteLine("    x: MolesOfPollutants       # of moles of Pollutants to inlude in the mixture");
-            Console.WriteLine("    co2: MolesOfCarbonDioxide  # of moles of Carbon Dioxide to inlude in the mixture");
-            Console.WriteLine("    h20: MolesOfWater          # of moles of Water to inlude in the mixture");
-            Console.WriteLine("    temp: TemperatureInKelvin  Temperature of the mixture in Kelvin, if not specified will be 295.15 K");
+            Console.WriteLine("PressureRegulatorTest InputAtmosphereSpecification OutputAtmosphereSpecification");
+            Console.WriteLine("  InputAtmosphereSpecification and OutputAtmosphereSpecification specifice the respective input and output atmospheres.");
+            Console.WriteLine("  they are 8 floating point numbers seperated by ':' of the format:");
+            Console.WriteLine("    (Volume):(Oxygen):(Nitrogen):(CarbonDioxide):(Volatiles):(Pollutant):(Water):(Temperature)");
+            Console.WriteLine("    Volume is specified in Liters, gas components in moles and temperature in Kelvins.");
+            Console.WriteLine("    ");
+            Console.WriteLine("    Example:");
+            Console.WriteLine("    PressureRegulatorTest 1000:1000:3000:0:0:0:0:295.15 500:0:0:0:0:0:0:0");
+            Console.WriteLine("    Input atmosphere = 1000 L of 25%/75% mix of Oxygen/Nitrogen @ 295.15 K");
+            Console.WriteLine("    Output atmosphere = 500 L empty atmosphere");
 #if DEBUG
             Console.ReadKey();
 #endif
