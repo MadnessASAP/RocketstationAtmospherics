@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PressureRegulatorTest", "Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceTest", "DeviceTest\DeviceTest.csproj", "{03E8D396-DCE1-4ABD-A3B2-2C25D54868E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtmosphericsPatch", "HarmonyPatch\AtmosphericsPatch.csproj", "{A2BB5779-48EB-41E1-8322-A81B52EA1297}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtmosphericsPatch", "AtmosphericsPatch\AtmosphericsPatch.csproj", "{A2BB5779-48EB-41E1-8322-A81B52EA1297}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
