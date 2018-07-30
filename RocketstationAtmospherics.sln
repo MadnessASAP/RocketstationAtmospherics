@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PressureRegulatorTest", "Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceTest", "DeviceTest\DeviceTest.csproj", "{03E8D396-DCE1-4ABD-A3B2-2C25D54868E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtmosphericsPatch", "HarmonyPatch\AtmosphericsPatch.csproj", "{A2BB5779-48EB-41E1-8322-A81B52EA1297}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{03E8D396-DCE1-4ABD-A3B2-2C25D54868E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03E8D396-DCE1-4ABD-A3B2-2C25D54868E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03E8D396-DCE1-4ABD-A3B2-2C25D54868E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2BB5779-48EB-41E1-8322-A81B52EA1297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2BB5779-48EB-41E1-8322-A81B52EA1297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2BB5779-48EB-41E1-8322-A81B52EA1297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2BB5779-48EB-41E1-8322-A81B52EA1297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
