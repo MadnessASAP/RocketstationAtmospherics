@@ -51,7 +51,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PressureRegulatorMod.cs" />
+    <Compile Include="AtmosphericsMod.cs" />
+    <Compile Include="Patch_PressureRegulator.cs" />
+    <Compile Include="Patch_VolumePump.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,27 +1,9 @@
-﻿using System.Reflection;
-using System.Reflection.Emit;
+﻿using System.Reflection.Emit;
 using System.Collections.Generic;
 using Harmony;
-using SEModLoader;
-using UnityEngine;
 
 namespace AtmosphericsPatch
 {
-
-    public class PressureRegulatorMod : IMod
-    {
-        public static void Init()
-        {
-            Debug.Log("PressureRegulatorMod: Loaded, version: " + Assembly.GetExecutingAssembly().GetName().Version);
-            var harmony = HarmonyInstance.Create("net.a5ap.pressureregulatormod");
-            harmony.PatchAll();
-
-            foreach (var method in harmony.GetPatchedMethods())
-                Debug.Log("PressureRegulatorMod: Patched: " + method.FullDescription());
-            Debug.Log("PressureRegulatorMod: Finished Loading");
-        }
-    }
-
     [HarmonyPatch(typeof(Assets.Scripts.Objects.Pipes.PressureRegulator), "OnAtmosphericTick")]
     class Patch_PressureRegulator_OnAtmosphericTick
     {
@@ -29,9 +11,9 @@ namespace AtmosphericsPatch
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             yield return new CodeInstruction(OpCodes.Ldarg_0);
-            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Assets.Scripts.Objects.Pipes.Device), "OnAtmosphericTick"));
+            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Assets.Scripts.Objects.Pipes.Device), "OnAtmosphericTick"));       // call base.OnAtmosphericTick
             yield return new CodeInstruction(OpCodes.Ldarg_0);
-            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Patch_PressureRegulator_OnAtmosphericTick), "_newOnAtmosphericTick"));
+            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Patch_PressureRegulator_OnAtmosphericTick), "_newOnAtmosphericTick")); // call our OnAtmosphericTick method
             yield return new CodeInstruction(OpCodes.Ret);
         }
 
