@@ -6,7 +6,7 @@ namespace RocketstationAtmospherics
 {
     public class PressureRegulator : Valve
     {
-        public PressureRegulator(RegulatorType regulatorType = RegulatorType.Upstream, float sonicConductance = 8e-4f,
+        public PressureRegulator(RegulatorType regulatorType = RegulatorType.Upstream, float sonicConductance = 4e-4f,
             Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null) : base(inputAtmosphere, outputAtmosphere, sonicConductance)
         {
             RegulatorType = regulatorType;

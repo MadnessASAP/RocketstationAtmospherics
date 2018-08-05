@@ -5,7 +5,7 @@ namespace RocketstationAtmospherics
 {
     public class Valve : AtmosphericDevice
     {
-        public Valve(Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null, float sonicConductance = 8e-4f) : base(inputAtmosphere, outputAtmosphere)
+        public Valve(Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null, float sonicConductance = 4e-4f) : base(inputAtmosphere, outputAtmosphere)
         {
             SonicConductance = sonicConductance;
         }
