@@ -7,9 +7,36 @@ namespace RocketstationAtmospherics
     {
         public VolumePump(Atmosphere inputAtmosphere = null, Atmosphere outputAtmosphere = null) : base(inputAtmosphere, outputAtmosphere) { }
 
+
         /// <summary>
         /// Cycle the volume pump moving VolumeSetting liters from the input to the output
         /// </summary>
+        public override void Tick()
+        {
+            if (InputAtmosphere == null || OutputAtmosphere == null || InputAtmosphere.PressureGassesAndLiquidsInPa < 1) return;
+            GasMixture mix = InputAtmosphere.Remove(InputAtmosphere.TotalMoles * VolumeSetting / (VolumeSetting + InputAtmosphere.Volume));
+
+            float work = 10;    // Pull 10 W in standyby power
+            float p1 = InputAtmosphere.PressureGassesAndLiquidsInPa;
+            float p2 = OutputAtmosphere.PressureGassesAndLiquidsInPa;
+
+            // Only do work if theres work to be done!
+            if (p1 < p2)
+            {
+                float v1 = VolumeSetting;
+                float v2;
+
+                work += ThermodynamicHelpers.AdiabaticPressureChange(p1, v1, p2, out v2);
+            }
+
+            // Add work done to output atmosphere.
+            mix.AddEnergy(work);
+            OutputAtmosphere.Add(mix);
+
+            this.UsedPower = work;
+        }
+
+        /*
         public override void Tick()
         {
             if (InputAtmosphere == null || OutputAtmosphere == null) return;
@@ -57,6 +84,7 @@ namespace RocketstationAtmospherics
             // Saved power used power.
             this.UsedPower = totalWork;
         }
+        */
 
         /// <summary>
         /// How man literes per second to flow;

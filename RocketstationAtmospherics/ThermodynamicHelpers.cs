@@ -36,7 +36,7 @@ namespace RocketstationAtmospherics
         /// <param name="p1">Inital pressure (Pascals)</param>
         /// <param name="v1">Inital volume (Cubic meters)</param>
         /// <param name="v2">Final volume (Cubic meters)</param>
-        /// <returns>A tuple containing the end state. (Final pressure (Pascals), Work Performed (Joules))</returns>
+        /// <returns>Work Performed (Joules)</returns>
         public static float AdiabaticVolumeChange(float p1, float v1, out float p2, float v2)
         {
             // Calculate the constant K used in this process
@@ -46,9 +46,26 @@ namespace RocketstationAtmospherics
             p2 = K / (float)Math.Pow(v2, Constants.AdiabaticIndex);
 
             // Calculate work done by the process
-            float work = K / (1 - Constants.AdiabaticIndex) *
-                ((float)Math.Pow(v2, 1 - Constants.AdiabaticIndex) - (float)Math.Pow(v1, 1 - Constants.AdiabaticIndex));
+            float work = (float)(K / (1 - Constants.AdiabaticIndex) *
+                (Math.Pow(v2, 1 - Constants.AdiabaticIndex) - Math.Pow(v1, 1 - Constants.AdiabaticIndex)));
 
+
+            return work;
+        }
+
+        public static float AdiabaticPressureChange(float p1, float v1, float p2, out float v2)
+        {
+            if (p2 == 0) { v2 = float.PositiveInfinity; return 0; }
+            
+            // Calculate the constant K used in this process
+            float K = p1 * (float)Math.Pow(v1, Constants.AdiabaticIndex);
+
+            // Calculate Final Volume
+            v2 = (float)Math.Pow(K / p2, 1/Constants.AdiabaticIndex);
+
+            // Calculate work done by the process
+            float work = (float)(K / (1 - Constants.AdiabaticIndex) *
+                (Math.Pow(v2, 1 - Constants.AdiabaticIndex) - Math.Pow(v1, 1 - Constants.AdiabaticIndex)));
 
             return work;
         }
