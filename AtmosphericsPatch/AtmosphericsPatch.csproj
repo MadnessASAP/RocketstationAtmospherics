@@ -29,6 +29,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\Stationeers\rocketstation_Data\Managed\0Harmony.dll</HintPath>
@@ -39,19 +42,16 @@
     <Reference Include="SEModLoader">
       <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\Stationeers\rocketstation_Data\Managed\SEModLoader.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\Stationeers\rocketstation_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Networking">
+      <HintPath>..\..\..\..\..\..\SteamLibrary\steamapps\common\Stationeers\rocketstation_Data\Managed\UnityEngine.Networking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PressureRegulatorPatch.cs" />
+    <Compile Include="PressureRegulatorMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
