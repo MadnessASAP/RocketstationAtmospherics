@@ -9,7 +9,7 @@ namespace AtmosphericsPatch
     class Patch_VolumePump_OnAtmosphericTick
     {
         [HarmonyTranspiler]
-        IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             yield return new CodeInstruction(OpCodes.Ldarg_0);
             yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Assets.Scripts.Objects.Pipes.Device), "OnAtmosphericTick"));       // call base.OnAtmosphericTick
@@ -38,7 +38,7 @@ namespace AtmosphericsPatch
     class Patch_VolumePump_GetUsedPower
     {
         [HarmonyTranspiler]
-        IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             yield return new CodeInstruction(OpCodes.Ldarg_0);
             yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Patch_VolumePump_GetUsedPower), "_patchMethod")); // Will return used power
