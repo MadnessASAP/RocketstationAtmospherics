@@ -35,6 +35,7 @@ namespace RocketstationAtmospherics
         /// </summary>
         /// <param name="p1">Inital pressure (Pascals)</param>
         /// <param name="v1">Inital volume (Cubic meters)</param>
+        /// <param name="p2">Final calculated pressure (Pascals)</param>
         /// <param name="v2">Final volume (Cubic meters)</param>
         /// <returns>Work Performed (Joules)</returns>
         public static float AdiabaticVolumeChange(float p1, float v1, out float p2, float v2)
@@ -49,10 +50,18 @@ namespace RocketstationAtmospherics
             float work = (float)(K / (1 - Constants.AdiabaticIndex) *
                 (Math.Pow(v2, 1 - Constants.AdiabaticIndex) - Math.Pow(v1, 1 - Constants.AdiabaticIndex)));
 
-
-            return work;
+            // Flip the sign so that energy consumed is positive
+            return -work;
         }
 
+        /// <summary>
+        /// Calculate a pressure change using an adiabatic process. Returns the energy used.
+        /// </summary>
+        /// <param name="p1">Inital pressure (Pascals)</param>
+        /// <param name="v1">Inital volume (Cubic meters)</param>
+        /// <param name="p2">Final pressure (Pascals)</param>
+        /// <param name="v2">Final calculated volume (Cubic meters)</param>
+        /// <returns>Work Performed (Joules)</returns>
         public static float AdiabaticPressureChange(float p1, float v1, float p2, out float v2)
         {
             if (p2 == 0) { v2 = float.PositiveInfinity; return 0; }
@@ -67,7 +76,8 @@ namespace RocketstationAtmospherics
             float work = (float)(K / (1 - Constants.AdiabaticIndex) *
                 (Math.Pow(v2, 1 - Constants.AdiabaticIndex) - Math.Pow(v1, 1 - Constants.AdiabaticIndex)));
 
-            return work;
+            // Flip the sign so that energy consumed is positive
+            return -work;
         }
     }
 

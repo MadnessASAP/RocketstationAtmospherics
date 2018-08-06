@@ -13,24 +13,30 @@ namespace RocketstationAtmospherics
         /// </summary>
         public override void Tick()
         {
-            if (InputAtmosphere == null || OutputAtmosphere == null || InputAtmosphere.PressureGassesAndLiquidsInPa < 1) return;
-            GasMixture mix = InputAtmosphere.Remove(InputAtmosphere.TotalMoles * VolumeSetting / (VolumeSetting + InputAtmosphere.Volume));
+            // Bail now if there's nothing to do.
+            if (InputAtmosphere == null || OutputAtmosphere == null || InputAtmosphere.PressureGassesAndLiquidsInPa < 1 || VolumeSetting == 0) return;
 
-            float work = 10;    // Pull 10 W in standyby power
-            float p1 = InputAtmosphere.PressureGassesAndLiquidsInPa;
-            float p2 = OutputAtmosphere.PressureGassesAndLiquidsInPa;
+            // Pull the mixture from the input side.
+            GasMixture mix = InputAtmosphere.Remove(InputAtmosphere.TotalMoles * VolumeSetting / (VolumeSetting + InputAtmosphere.Volume)) ?? new GasMixture();
 
-            // Only do work if theres work to be done!
+            float work = 0;     // Work done in Joules
+            float p1 = InputAtmosphere.PressureGassesAndLiquidsInPa;    // Initial Pressure
+            float p2 = OutputAtmosphere.PressureGassesAndLiquidsInPa;   // Final Pressure
+
+            // If the output has a lower pressure then the input no work needs to be done and the mixture can simply be moved.
             if (p1 < p2)
             {
-                float v1 = VolumeSetting;
-                float v2;
+                float v1 = VolumeSetting;   // Inital volume
+                float v2;                   // Final volume. Not used but potentially could be if a second stage of compression INTO the Output side gets implemented.
 
-                work += ThermodynamicHelpers.AdiabaticPressureChange(p1, v1, p2, out v2);
+                // Compression consumes energy, calculate that here
+                work = ThermodynamicHelpers.AdiabaticPressureChange(p1, v1, p2, out v2);
             }
 
-            // Add work done to output atmosphere.
+            // Add the consumed energy to the mixture as heat
             mix.AddEnergy(work);
+
+            // And feed that mixture into the output
             OutputAtmosphere.Add(mix);
 
             this.UsedPower = work;
