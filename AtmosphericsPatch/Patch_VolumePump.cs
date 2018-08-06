@@ -20,6 +20,7 @@ namespace AtmosphericsPatch
 
         private static void _patchMethod(VolumePump vp)
         {
+            vp.UsedPower = 10;  // 10 Joules of standby power seems reasonable.
             if(vp.OnOff && vp.Powered && vp.Error != 1 && vp.InputNetwork != null && vp.OutputNetwork != null)
             {
                 var sim = new RocketstationAtmospherics.VolumePump(vp.InputNetwork.Atmosphere, vp.OutputNetwork.Atmosphere)
@@ -29,7 +30,7 @@ namespace AtmosphericsPatch
 
                 sim.Tick();
 
-                vp.UsedPower = sim.UsedPower;
+                vp.UsedPower += sim.UsedPower;
             }
         }
     }
